@@ -6,7 +6,7 @@ engines:
     name: "stockfish"
     ponder: true
     silence_stderr: false
-    move_overhead_multiplier: 24.0
+    move_overhead_multiplier: 20.0
     uci_options:
       Threads: 4
       Hash: 2508
@@ -20,7 +20,7 @@ engines:
     name: "stockfish"
     ponder: true
     silence_stderr: false
-    move_overhead_multiplier: 23.0
+    move_overhead_multiplier: 21.0
     uci_options:
       Threads: 4
       Hash: 2248
@@ -203,11 +203,11 @@ challenge:
   time_controls:
     - bullet
     - blitz
-  # - rapid
+    - rapid
   # - classical
   bot_modes:
     - casual
-  # - rated
+    - rated
   human_modes:
     - casual
     - rated
@@ -221,7 +221,7 @@ matchmaking:
       tc: 1+0
 
 messages:
-  greeting: "Humpo Dumpo! I am {me} made by Realboy9000.Looking forward to start,good luck."
+  greeting: "Hey! I am {me} running on {engine}.Type !assist for a glimpse of my commands."
   goodbye: "Good game!How about a rematch?"
   greeting_spectators: "Hey, I'm running on {engine} .Type !help for a list of commands."
   goodbye_spectators: "Thanks For watching!"
