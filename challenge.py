@@ -23,7 +23,7 @@ def send_challenge(username, time_control, mode):
     payload = {
         "rated": (mode.lower() == "rated"),
         "clock": {
-            "limit": time_control[0] * 60,  # minutes → seconds
+            "limit": int(time_control[0] * 60),  # minutes → seconds
             "increment": time_control[1]
         },
         "color": "random"
@@ -40,6 +40,7 @@ def main():
     if len(sys.argv) < 5:
         print("Usage: python challenge.py <player_id> <number_of_games> <minutes>+<increment> <mode>")
         print("Example: python challenge.py maggicoder16 3 3+2 rated")
+        print("Example: python challenge.py maggicoder16 3 0.5+0 casual   # 30 seconds")
         sys.exit(1)
 
     player_id = sys.argv[1]
@@ -48,9 +49,11 @@ def main():
     mode = sys.argv[4]
 
     try:
-        minutes, increment = map(int, time_str.split("+"))
-    except ValueError:
-        print("Error: Time control must be in format <minutes>+<increment>, e.g., 5+0")
+        base_str, inc_str = time_str.split("+")
+        minutes = float(base_str)   # allow decimals like 0.5
+        increment = int(inc_str)
+    except Exception:
+        print("Error: Time control must be in format <minutes>+<increment>, e.g., 5+0 or 0.5+0")
         sys.exit(1)
 
     for i in range(num_games):
