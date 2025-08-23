@@ -82,11 +82,15 @@ jobs:
       - name: Wait if another workflow is active  
         run: |  
           echo "Checking for running workflows..."  
-          while gh run list --workflow "Run botli" --status in_progress --json databaseId --jq '.[0].databaseId' | grep -q .; do  
-            echo "Another run is still active. Sleeping 60s..."  
+          while true; do  
+            COUNT=$(gh run list --workflow "Run botli" --status in_progress --json status --jq 'length')  
+            if [ "$COUNT" -eq 0 ]; then  
+              echo "No active workflow detected. Proceeding..."  
+              break  
+            fi  
+            echo "Found $COUNT workflow(s) still running. Waiting 60s..."  
             sleep 60  
           done  
-          echo "No active workflow detected. Proceeding..."  
         env:  
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
   
