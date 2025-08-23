@@ -78,7 +78,7 @@ jobs:
         run: |
           echo "Waiting for lock before starting Run Bot..."
           exec 9>/tmp/runbot.lock
-          flock 9   # waits if another workflow is already running Run Bot
+          flock 9   # waits here if another workflow is already running Run Bot
 
           echo "Lock acquired. Starting bot..."
 
@@ -114,7 +114,7 @@ jobs:
             fi
           fi
 
-          # Auto-exit after 350 minutes
+          # Auto-exit after ~350 minutes (21000 sec)
           ( sleep 21000 && echo "Time up. Killing bot..." && kill -SIGTERM $BOT_PID ) &
 
           wait $BOT_PID
