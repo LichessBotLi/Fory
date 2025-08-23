@@ -73,19 +73,10 @@ jobs:
         run: |
           chmod +x ./engines/stockfish
           chmod +x ./engines/fairy-stockfish_x86-64-bmi2
-
-      - name: 🔒 Check if another workflow is running
+          
+      - name: Run Bot
         run: |
-          exec 9>/tmp/runbot.lock
-          if ! flock -n 9; then
-            echo "⚠️ Another workflow is already running. Waiting for it to finish..."
-            flock 9
-          fi
-          echo "✅ No workflow running anymore, allowing Run Bot..."
-
-      - name: Run Bot (with pause if another run active)
-        run: |
-          echo "Lock acquired. Starting bot..."
+          echo "Starting bot..."
 
           # Read inputs
           UPGRADE="${{ github.event.inputs.upgrade }}"
@@ -100,7 +91,7 @@ jobs:
           [ "$MATCHMAKING" = "true" ] && CMD="$CMD matchmaking"
           [ -n "$ADDITIONAL_CMD" ] && CMD="$CMD $ADDITIONAL_CMD"
 
-          echo "▶️ Running command: $CMD"
+          echo "Running command: $CMD"
           eval "$CMD" &
 
           BOT_PID=$!
@@ -108,22 +99,22 @@ jobs:
           # --- Conditional matchmaking stop ---
           if [ "$MATCHMAKING" = "true" ]; then
             if [ "$NEVER_STOP" = "true" ]; then
-              echo "⚡ Never stop ticked. Stop command will not run."
+              echo "Never stop ticked. Stop command will not run."
             else
               if ! [[ "$STOP_SECONDS" =~ ^[0-9]+$ ]] || [ "$STOP_SECONDS" -le 0 ]; then
-                echo "⚠️ Invalid stop_seconds input: $STOP_SECONDS. Skipping stop."
+                echo "Invalid stop_seconds input: $STOP_SECONDS. Skipping stop."
               else
-                echo "🕒 Scheduling stop command in $STOP_SECONDS seconds..."
-                ( sleep "$STOP_SECONDS" && echo "⏹ Running stop command..." && python3 -u user_interface.py stop ) &
+                echo "Scheduling stop command in $STOP_SECONDS seconds..."
+                ( sleep "$STOP_SECONDS" && echo "Running stop command..." && python3 -u user_interface.py stop ) &
               fi
             fi
           fi
 
-          # Auto-exit after ~350 minutes (21000 sec)
-          ( sleep 21000 && echo "⏰ Time up. Killing bot..." && kill -SIGTERM $BOT_PID ) &
+          # Auto-exit after 350 minutes
+          ( sleep 21000 && echo "Time up. Killing bot..." && kill -SIGTERM $BOT_PID ) &
 
           wait $BOT_PID
-          echo "✅ Bot ended cleanly."
+          echo "Bot ended cleanly."
 
       - name: 🔁 Self-Restart (Fire-and-Forget)
         if: always()
