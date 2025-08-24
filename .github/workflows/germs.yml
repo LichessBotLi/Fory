@@ -1,0 +1,32 @@
+name: Generate Config Copies
+
+on:  
+  workflow_dispatch:
+
+jobs:  
+  copy-configs:  
+    runs-on: ubuntu-latest  
+    permissions:  
+      contents: write
+
+    steps:  
+      - name: Checkout repository  
+        uses: actions/checkout@v4
+
+      - name: Generate config3.yml .. config1000.yml  
+        run: |
+          for i in $(seq 3 1000); do
+            if [ "$i" -eq 786 ]; then
+              cp config.yml Config/config${i}.yml
+            else
+              cp Config/config2.yml Config/config${i}.yml
+            fi
+          done
+
+      - name: Commit and push configs  
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add Config/
+          git commit -m "Generated config3.yml to config1000.yml with config786.yml from root config.yml" || echo "No changes to commit"
+          git push

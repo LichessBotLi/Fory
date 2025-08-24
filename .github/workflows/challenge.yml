@@ -1,0 +1,46 @@
+name: Lichess Challenge
+
+on:
+  workflow_dispatch:
+    inputs:
+      player_id:
+        description: "Opponent Lichess username"
+        required: true
+      num_games:
+        description: "Number of games"
+        required: true
+      time_control:
+        description: "Time control (e.g., 3+2 or 0.5+0)"
+        required: true
+      mode:
+        type: choice
+        description: "Game mode"
+        required: true
+        default: rated
+        options:
+          - rated
+          - casual
+
+jobs:
+  challenge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Challenge Script
+        run: |
+          python -u challenge.py \
+            "${{ github.event.inputs.player_id }}" \
+            "${{ github.event.inputs.num_games }}" \
+            "${{ github.event.inputs.time_control }}" \
+            "${{ github.event.inputs.mode }}"
+        env:
+          LICHESS_KEY: ${{ secrets.LICHESS_KEY }}
