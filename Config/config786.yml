@@ -1,0 +1,246 @@
+token: "TokenTimeIsBackBuddyss"  # Lichess OAuth2 Token.
+
+engines:
+  standard:
+    dir: "./engines"
+    name: "stockfish"
+    ponder: true
+    silence_stderr: false
+    move_overhead_multiplier: 20.0
+    uci_options:
+      Threads: 4
+      Hash: 2508
+      Move Overhead: 100
+    limits:
+      # time: 20.0
+      # depth: 50
+      # nodes: 8000000
+  bullet:
+    dir: "./engines"
+    name: "stockfish"
+    ponder: true
+    silence_stderr: false
+    move_overhead_multiplier: 21.0
+    uci_options:
+      Threads: 4
+      Hash: 2248
+      Move Overhead: 100
+    limits:
+      # time: 20.0
+      # depth: 50
+      # nodes: 8000000
+
+  chess960:
+    dir: "./engines"
+    name: "stockfish"
+    ponder: true
+    silence_stderr: false
+    move_overhead_multiplier: 22.0
+    uci_options:
+      Threads: 4
+      Hash: 2248
+      Move Overhead: 100
+    limits:
+      # time: 20.0
+      # depth: 50
+      # nodes: 8000000
+
+  variants:
+    dir: "./engines"
+    name: "fairy-stockfish_x86-64-bmi2"
+    ponder: false
+    silence_stderr: false
+    move_overhead_multiplier: 1.1
+    uci_options:
+      Threads: 4
+      Hash: 768
+      Move Overhead: 200
+      EvalFile: "horde-28173ddccabe.nnue:racingkings-636b95f085e3.nnue:crazyhouse-8ebf84784ad2.nnue:kingofthehill-978b86d0e6a4.nnue:antichess-dd3cbe53cd4e.nnue:atomic-2cf13ff256cc.nnue:3check-cb5f517c228b.nnue"
+    limits:
+      time: 20.0
+      depth: 50
+      nodes: 5000000
+
+syzygy:
+  standard:
+    enabled: true
+    paths:
+      - "./engines/syzygy"
+    max_pieces: 7
+    instant_play: true
+  antichess:
+    enabled: false
+    paths:
+      - "/path/to/antichess/syzygy"
+    max_pieces: 6
+    instant_play: true
+  atomic:
+    enabled: false
+    paths:
+      - "/path/to/atomic/syzygy"
+    max_pieces: 6
+    instant_play: true
+
+gaviota:
+  enabled: false
+  paths:
+    - "/path/to/gaviota"
+  max_pieces: 5
+
+opening_books:
+  enabled: true
+  priority: 900
+  books:
+#   standard:
+#     selection: weighted_random          # Move selection is one of "weighted_random", "uniform_random" or "best_move".
+#     max_depth: 16                       # Half move max depth. (Comment this line for max depth)
+#     names:                              # List of names of books to use if there is no specific book for the time control, white, black or chess960
+#       - DefaultBook    
+    standard_black:
+      selection: best_move 
+    # max depth : 69 
+      names:
+        - Stay
+        - Win
+        - Black
+    standard_white:
+      selection: best_move 
+    # max depth : 69 
+      names:
+        - Stay
+        - White
+        - Black
+        - Optimus
+
+    chess960: 
+      selection: best_move 
+      names: 
+        - Chess960
+    chess960_white: 
+      selection: best_move 
+      names: 
+        - Ches
+        - White1
+        - White2
+
+
+    chess960_black: 
+      selection: best_move 
+      names: 
+        - Ches
+        - Black1
+        - Black2
+        
+    humans: 
+      selection: best_move 
+      names: 
+        - Torma
+        - Titans
+
+online_moves:
+  opening_explorer:
+    enabled: false
+    priority: 300
+    only_without_book: false
+    use_for_variants: true
+    min_time: 20
+    timeout: 5
+    min_games: 10
+    only_with_wins: true
+    selection: "win_rate"
+    anti: true
+    # max_depth: 20
+
+  lichess_cloud:
+    enabled: false
+    priority: 200
+    only_without_book: false
+    min_eval_depth: 20
+    min_time: 10
+    timeout: 3
+    # max_depth: 30
+
+  chessdb:
+    enabled: false                         # Activate online moves from https://chessdb.cn/queryc_en/
+    priority: 100                         # Priority with which this move source is used. Higher priority is used first.
+    only_without_book: false              # Whether the chessdb should only be used if there is no matching book.
+    min_candidates: 5                     # Minimum number of candidate moves.
+    min_time: 20                          # Time the bot must have at least to use the online move. +10 seconds in games without increment.
+    timeout: 5                            # Time the server has to respond.
+    selection: "best"                     # Move selection is one of "optimal", "best" or "good".
+    max_depth: 30
+    
+  online_egtb:
+    enabled: true
+    min_time: 5
+    timeout: 3
+
+offer_draw:
+  enabled: true
+  score: 10
+  consecutive_moves: 10
+  min_game_length: 32
+  against_humans: false
+
+resign:
+  enabled: false
+  score: -1000
+  consecutive_moves: 6
+  against_humans: false
+
+challenge:
+  concurrency: 2
+  bullet_with_increment_only: false   
+# min_initial: 60
+  variants:
+    - standard
+    - chess960
+    - antichess
+    - atomic
+    - kingOfTheHill
+    - racingKings
+    - threeCheck
+  time_controls:
+    - bullet
+    - blitz
+    - rapid
+  # - classical
+  bot_modes:
+    - casual
+    - rated
+  human_modes:
+    - casual
+    - rated
+
+matchmaking:
+  delay: 10
+  timeout: 30
+  selection: cyclic 
+  types:
+    bullet:
+      tc: 0.5+0
+
+messages:
+  greeting: "Hey! I am {me} running on {engine}.Type !assist for a glimpse of my commands."
+  goodbye: "Good game!How about a rematch?"
+  greeting_spectators: "Hey, I'm running on {engine} .Type !help for a list of commands."
+  goodbye_spectators: "Thanks For watching!"
+
+whitelist:
+  - Realboy9000 
+  - Exogenetic-Bot 
+
+books:
+  Torma: "./engines/Torma.bin"
+  Optimus: "./engines/OPTIMUS2502.bin"
+  Black: "./engines/Optical.bin"
+  Win: "./engines/win.bin"
+  White: "./engines/white.bin"
+  Titans: "./engines/Titans.bin"
+  Stay: "./engines/terimakichud.bin"
+  Chess960: "./engines/merged.bin"
+  Ches: "./engines/book.bin"
+  White1: "./engines/lila1.bin"
+  White2: "./engines/lila2.bin"
+  Black1: "./engines/scala1.bin"
+  Black2: "./engines/scala2.bin"
