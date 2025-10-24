@@ -25,7 +25,7 @@ jobs:
           python extract_pgn_from_bin.py
 
       - name: Upload PGN artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Optical.pgn
           path: engines/Optical.pgn

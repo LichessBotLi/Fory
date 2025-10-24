@@ -38,7 +38,7 @@ jobs:
           polyglot make-book -pgn book/custom_book.pgn -bin book/book.bin -min-game 1 -max-ply 40
 
       - name: Upload .bin as GitHub artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: opening-book
           path: book/book.bin
